@@ -50,6 +50,7 @@ EXTERNAL_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     # Local apps
     "apps.users",
+    "apps.task_management",
 ]
 
 INSTALLED_APPS += EXTERNAL_APPS
