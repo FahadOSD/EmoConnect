@@ -16,4 +16,8 @@ dependencies = [
     "gunicorn>=23.0.0",
     "black>=25.9.0",
     "isort>=6.0.1",
+    "django-cors-headers>=4.0.0", # Added for CORS support
+    "django-filter>=23.2", # Added for filtering
+    "python-dotenv>=1.0.0", # Added for environment variables
+    "drf-spectacular>=0.26.0", # Added drf-spectacular
 ]
