@@ -25,6 +25,7 @@ urlpatterns = [
     # Local app routes
     path("", include("apps.users.urls")),
     path("", include("apps.task_management.urls")),
+    path("", include("apps.payments.urls")),
 
 
     # API Documentation
