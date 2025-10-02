@@ -38,6 +38,10 @@ INSTALLED_APPS = [
 EXTERNAL_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
+    "django_filters",
+    "corsheaders",
+    "drf_spectacular",
+    'drf_yasg', # Swagger 
     # social auth
     "django.contrib.sites",
     "allauth",  # django-allauth for social login
@@ -47,6 +51,7 @@ EXTERNAL_APPS = [
     "allauth.socialaccount.providers.apple",  # Apple login
     "dj_rest_auth",  # dj-rest-auth for handling auth endpoints
     "dj_rest_auth.registration",  # Register endpoints for signup/login
+    "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
     # Local apps
     "apps.users",
@@ -66,6 +71,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",  # Required for django-allauth
+    "corsheaders.middleware.CorsMiddleware",  # CORS
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -175,10 +181,27 @@ AUTHENTICATION_BACKENDS = [
 
 # REST framework setup for JWT (both for manual and social login)
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",  # Use JWT for authentication
-    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter',
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DATETIME_FORMAT': '%Y-%m-%d %H:%M:%S',
+    'DATE_FORMAT': '%Y-%m-%d',
 }
+
+# JWT Configuration
+from datetime import timedelta
 
 # Simple JWT configuration (for JWT token expiration and refresh)
 SIMPLE_JWT = {
@@ -219,13 +242,21 @@ SOCIALACCOUNT_PROVIDERS = {
     },
 }
 
-# Allauth settings for manual email authentication
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_AUTHENTICATION_METHOD = "email"  # Login using email only
+# # Allauth settings for manual email authentication
+# ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_USERNAME_REQUIRED = False
+# ACCOUNT_AUTHENTICATION_METHOD = "email"  # Login using email only
+# ACCOUNT_EMAIL_VERIFICATION = "mandatory"  # Require email verification
+# ACCOUNT_UNIQUE_EMAIL = True  # Ensure email uniqueness
+# ACCOUNT_USERNAME_VALIDATORS = None  # Disable username validation, as email is used
+
+# Allauth settings for manual email authentication (Updated to new format)
+ACCOUNT_LOGIN_METHODS = {'email'}  # Login using email only (replaces ACCOUNT_AUTHENTICATION_METHOD)
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']  # Required fields (replaces ACCOUNT_EMAIL_REQUIRED and ACCOUNT_USERNAME_REQUIRED)
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"  # Require email verification
 ACCOUNT_UNIQUE_EMAIL = True  # Ensure email uniqueness
 ACCOUNT_USERNAME_VALIDATORS = None  # Disable username validation, as email is used
+
 
 # Django Allauth and Dj-Rest-Auth JWT integration
 REST_USE_JWT = True
