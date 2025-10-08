@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from datetime import date, time
+from apps.users.models import CustomUser 
 
 class Task(models.Model):
     CATEGORY_CHOICES = [
@@ -14,7 +15,7 @@ class Task(models.Model):
         ('Pending', 'Pending'),
         ('Completed', 'Completed'),
     ]
-    
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='tasks')
     task_name = models.CharField(max_length=255, blank=False, null=False)
     description = models.TextField(blank=True, null=True)
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, blank=False, null=False)
