@@ -42,6 +42,7 @@ EXTERNAL_APPS = [
     "corsheaders",
     "drf_spectacular",
     'drf_yasg', # Swagger 
+    'push_notifications',
     # social auth
     "django.contrib.sites",
     "allauth",  # django-allauth for social login
@@ -150,10 +151,20 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 
-
-
-
-
+#===============================================================
+# Celery
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Using Redis as the broker
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+#===============================================================
+# Push Notification
+# PUSH_NOTIFICATIONS_SETTINGS = {
+#     "FCM_API_KEY": "your_firebase_api_key",  # Replace with your actual FCM API key
+#     "GCM_API_KEY": "your_google_cloud_messaging_api_key",  # Replace with your actual GCM key
+# }
+#===============================================================
 
 
 

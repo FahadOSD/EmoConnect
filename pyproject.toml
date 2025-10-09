@@ -20,4 +20,7 @@ dependencies = [
     "django-filter>=23.2", # Added for filtering
     "python-dotenv>=1.0.0", # Added for environment variables
     "drf-spectacular>=0.26.0", # Added drf-spectacular
+    "celery>=5.5.3",
+    "redis>=6.4.0",
+    "django-push-notifications>=3.2.1",
 ]
