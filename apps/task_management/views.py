@@ -2,6 +2,10 @@ from .models import Task
 from .serializers import TaskSerializer
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
+from .tasks import send_task_notification
+from datetime import datetime
+from django.utils import timezone
+
 
 # Create your views here.
 class TaskViewSet(ModelViewSet):
@@ -26,4 +30,12 @@ class TaskViewSet(ModelViewSet):
     
     def perform_create(self, serializer):
         # Automatically assign the currently authenticated user to the task
-        serializer.save(user=self.request.user)
+        Task = serializer.save(user=self.request.user)
+
+        # Schedule the notification if the task has a due date and time
+        if Task.due_date and Task.due_time:
+            # Convert due date and time to a datetime object
+            due_time = datetime.combine(Task.due_date, Task.due_time)
+            
+            # Schedule the Celery task to send notification at the due time
+            send_task_notification.apply_async(args=[Task.id], eta=due_time)
