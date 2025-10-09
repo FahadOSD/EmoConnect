@@ -57,7 +57,8 @@ EXTERNAL_APPS = [
     # Local apps
     "apps.users",
     "apps.task_management",
-    "apps.payments"
+    "apps.payments",
+    "apps.call_management",
 ]
 
 INSTALLED_APPS += EXTERNAL_APPS
