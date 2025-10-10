@@ -26,6 +26,7 @@ urlpatterns = [
     path("", include("apps.users.urls")),
     path("", include("apps.task_management.urls")),
     path("", include("apps.payments.urls")),
+    path("", include('apps.call_management.urls')),
 
 
     # API Documentation
