@@ -2,6 +2,9 @@ from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.models import SocialLogin
+
 from .views import (
     AppleLogin,
     CustomUserView,
@@ -22,10 +25,11 @@ router.register("", CustomUserView, basename="user")
 
 
 urlpatterns = [
+    path('reg/', include(router.urls)),
     # Include the router's URLs for the user-related endpoints
-    path(
-        "create_user/", CustomUserView.as_view({"post": "create"}), name="create_user"
-    ),
+    # path(
+    #     "create_user/", CustomUserView.as_view({"post": "create"}), name="create_user"
+    # ),
     # Include user viewset URLs (list/retrieve/update)
     path("user/", include(router.urls)),
     # JWT token endpoints for login
@@ -35,6 +39,7 @@ urlpatterns = [
     path("auth/google/", GoogleLoginView.as_view(), name="google-login"),
     path("auth/google/url/", google_auth_url, name="google-auth-url"),
     path("auth/google/callback/", google_auth_callback, name="google-auth-callback"),
+    path('auth/google/', include('allauth.urls')),
     # Apple OAuth login
     path("auth/apple/", AppleLogin.as_view(), name="apple-login"),
     path("auth/apple/url/", apple_auth_url, name="apple-auth-url"),
