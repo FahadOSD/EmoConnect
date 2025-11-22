@@ -16,10 +16,15 @@ class TaskViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated] 
     
     def get_queryset(self):
-        queryset = Task.objects.filter(user=self.request.user)
+        # queryset = Task.objects.filter(user=self.request.user)
+        # status = self.request.query_params.get('status', None)
+        # category = self.request.query_params.get('category', None)
+        user = getattr(self.request, "user", None)
+        if user is None or not user.is_authenticated:
+            return Task.objects.none()
+        queryset = Task.objects.filter(user=user)
         status = self.request.query_params.get('status', None)
         category = self.request.query_params.get('category', None)
-        
         
         if status:
             queryset = queryset.filter(status=status)

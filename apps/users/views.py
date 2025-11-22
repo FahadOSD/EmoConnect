@@ -77,6 +77,8 @@ class CustomUserView(ModelViewSet):
             return qs
         except Exception as e:
             raise e
+    
+
 
     @action(detail=False, methods=["post"])
     def register(self, request):

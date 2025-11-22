@@ -12,7 +12,11 @@ class CallViewSet(viewsets.ModelViewSet):
         """
         Optionally filter calls by the current user.
         """
-        return Call.objects.filter(user=self.request.user)
+        #return Call.objects.filter(user=self.request.user)
+        user = getattr(self.request, "user", None)
+        if user is None or not user.is_authenticated:
+            return Call.objects.none()
+        return Call.objects.filter(user=user)
 
     def perform_create(self, serializer):
         """
